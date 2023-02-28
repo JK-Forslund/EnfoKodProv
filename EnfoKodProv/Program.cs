@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System;
 using System.Threading;
+using System.Linq.Expressions;
 
 internal class Program
 {
@@ -9,6 +10,7 @@ internal class Program
     public static int PosY { get; set; }
     public static int PosX { get; set; }
     public static int mapSize { get; set; }
+    public static string command { get; set; }
 
     private static void Main(string[] args)
     {
@@ -20,9 +22,11 @@ internal class Program
 
     public static void Startup()
     {
-        
+        Console.WriteLine("Hello and welcome to Awesome RC Vehicles Simulation Program\n");
+
         // Map size
         Console.Write("Enter your MapSize: ");
+        
         mapSize = int.Parse(Console.ReadLine());
 
         // Start Positions
@@ -32,93 +36,123 @@ internal class Program
         startDirectionHandler();
 
         // command FFRFF
-        string command = Console.ReadLine();
+        Console.WriteLine("Enter your command: ");
+        command = Console.ReadLine();
 
         generateMap();
 
+
+        
         foreach (char c in command){
             step(c);
         }
 
-        System.Console.ReadLine();
-        System.Console.ReadLine();
-        System.Console.ReadLine();
+        
 
-
+        simulationResult();
         //string Direction;
         //string Command;
-        
+
+    }
+
+    private static void simulationResult()
+    {
+       
+        Console.WriteLine("");
+        Console.WriteLine("");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Success! Current direction is: {direction} And current position is: X = {PosX}, Y = {PosY}");
+        Console.ForegroundColor = ConsoleColor.White;
     }
 
     private static void step(char c)
     {
-       Thread.Sleep(1000);
-        Console.WriteLine();
         
-        switch (c)
-        {
-            case 'F':
-                switch (direction)
-                {
-                    case "N":
-                        PosY--;
-                        break;
-                    case "S":
-                        PosY++;
-                        break;
-                    case "E":
-                        PosX++;
-                        break;
-                    case "W":
-                        PosX--;
-                        break;
-                }
-                
-                break;
+            //Thread.Sleep(1000);
+            //Console.WriteLine();
+            switch (c)
+            {
+                case 'F':
+                    switch (direction)
+                    {
+                        case "N":
+                            PosY++;
+                            break;
+                        case "S":
+                            PosY--;
+                            break;
+                        case "E":
+                            PosX++;
+                            break;
+                        case "W":
+                            PosX--;
+                            break;
+                    }
 
-            case 'B':
-                switch (direction)
-                {
-                    case "N":
-                        PosY++;
-                        break;
-                    case "S":
-                        PosY--;
-                        break;
-                    case "E":
-                        PosX--;
-                        break;
-                    case "W":
-                        PosX++;
-                        break;
-                }
-                break;
+                    break;
 
-            case 'R':
-                switch (direction)
-                {
-                    case "N":
-                        direction = "E";
-                        break;
-                    case "W":
-                        direction = "N";
-                        break;
-                    case "S":
-                        direction = "W";
-                        break;
-                    case "E":
-                        direction = "S";
-                        break;
-                }
+                case 'B':
+                    switch (direction)
+                    {
+                        case "N":
+                            PosY++;
+                            break;
+                        case "S":
+                            PosY--;
+                            break;
+                        case "E":
+                            PosX--;
+                            break;
+                        case "W":
+                            PosX++;
+                            break;
+                    }
+                    break;
 
-                break;
-            case 'L':
-                Console.WriteLine("L");
-                break;
+                case 'R':
+                    switch (direction)
+                    {
+                        case "N":
+                            direction = "E";
+                            break;
+                        case "W":
+                            direction = "N";
+                            break;
+                        case "S":
+                            direction = "W";
+                            break;
+                        case "E":
+                            direction = "S";
+                            break;
+                    }
 
-                
-        }
-        generateMap();
+                    break;
+                case 'L':
+                    switch (direction)
+                    {
+                        case "N":
+                            direction = "W";
+                            break;
+                        case "W":
+                            direction = "S";
+                            break;
+                        case "S":
+                            direction = "E";
+                            break;
+                        case "E":
+                            direction = "N";
+                            break;
+                    }
+                    break;
+
+
+            }
+            generateMap();
+        
+        
+            
+        
+        
     }
 
     public static void startDirectionHandler()
@@ -135,21 +169,32 @@ internal class Program
 
     private static void generateMap()
     {
-        int[,] mapArea = new int[mapSize, mapSize];
-
-        
-        mapArea[PosY -1, PosX -1] = 1;
-        
-
-
-        for (int y = 0; y < mapArea.GetLength(1); y++)
+        try
         {
-            System.Console.WriteLine("");
-            for (int x = 0; x < mapArea.GetLength(0); x++)
+            int[,] mapArea = new int[mapSize, mapSize];
+
+            
+            mapArea[PosY -1, PosX -1] = 1;
+
+        
+            for (int y = 0; y < mapArea.GetLength(1); y++)
             {
-                System.Console.Write(mapArea[y, x]);
+                System.Console.WriteLine("");
+                for (int x = 0; x < mapArea.GetLength(0); x++)
+                {
+                    System.Console.Write(mapArea[y, x]);
+                }
+            
             }
+
         }
+        catch (Exception ex)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Your vehicle crashed! Current direction is: {direction} And current position is: X = {PosX}, Y = {PosY}");
+            throw ex;
+        }
+
     }
 
     private static void startPositionHandler()
@@ -180,18 +225,15 @@ internal class Program
     public static bool onlyDigitCheck(string compare){
         return compare.All(Char.IsDigit);
     }
+    public static bool onlyCharCheck(string compare)
+    {
+        return compare.All(Char.IsLetter);
+    }
 
-    
 
 
-    //    Console.WriteLine("Hello and welcome to Awesome RC Vehicles Simulation Program\n");
 
-    //    Console.Write("Enter your specified direction (N,E,S,W): ");
-    //    string Direction = Console.ReadLine();
-    //    Console.WriteLine($"Direction Selected: {Direction}");
-
-    //    Console.Write("Please write your desired simulation command: ");
-    //    string Command = Console.ReadLine();
+   
 
 
 

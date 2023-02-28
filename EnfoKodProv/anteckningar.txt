@@ -1,0 +1,5 @@
+Jag har kod som visar visuellt men kunde inte få den att funka helt felfritt, y axeln är omvänd och kan se lite skumt ut.
+
+MapSize har jag gjort till en area.
+
+Starta programmet och skriv in dina värden och programmet kommer skicka tillbaka ifall det har lyckats eller inte.
